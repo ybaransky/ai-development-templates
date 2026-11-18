@@ -1,0 +1,6 @@
+# Ignore local editor and temporary files; template Markdown remains tracked
+.vscode/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
