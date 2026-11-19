@@ -19,4 +19,4 @@
 
 ## Completion report
 
-Summarize changes, tests actually run, tests not run, remaining risks, and any on-device/on-target verification needed. Do not claim hardware testing from a successful compile.
+Summarize changes, tests actually run, tests not run, remaining risks, and any on-device/on-target verification needed. Do not claim hardware testing from a successful compile. Note further improvements worth considering.

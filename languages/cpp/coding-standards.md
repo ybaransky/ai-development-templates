@@ -1,9 +1,8 @@
 # Embedded C++ Coding Standards
 
-## General Coding Standards
+## General
 
-- Follow the project's existing naming, formatting, and language-standard settings.
-- Prefer simple composition, explicit ownership, and concrete dependencies when there is only one implementation; interfaces/virtual dispatch require a concrete benefit.
+- Follow the project's existing naming, formatting, and language-standard settings. Where the project has no established convention, use the Naming & Style rules below.
 - Use `constexpr`, `enum class`, `const`, references, and fixed-size storage where they improve safety and clarity.
 - Avoid unnecessary dynamic allocation in hot paths, unbounded recursion, and large stack temporaries on constrained targets.
 - Avoid `String` churn in tight loops on small MCUs; prefer bounded buffers where appropriate.
@@ -12,6 +11,26 @@
 - Favor readable functions and coherent modules; do not mechanically split functions or add wrappers merely to satisfy style rules.
 - Document non-obvious rationale, hardware constraints, and intentional deviations from standard conventions.
 - Review warnings and binary/resource impact; avoid hiding warnings without understanding them.
+
+## Design
+
+- Apply SOLID principles, except that dependency inversion does not require an interface per class (see next bullet). Deviate from SOLID only with user approval, stating the pros and cons.
+- Depend on concrete types. Introduce interfaces/virtual dispatch only when there is a real second implementation or a concrete testing benefit.
+- **Use constructor injection of concrete types**, not interfaces.
+- Objects own their state. A class that is really a façade over file-static globals is not injectable no matter how it is passed around.
+- Favor composition over inheritance, and make ownership explicit.
+- Separate concerns into layers (hardware drivers, domain logic, I/O and UI) with clear module boundaries and minimal coupling between them.
+- Avoid leaky abstractions; prefer explicit behavior over implicit behavior.
+- Do not use singletons. Create each long-lived object once in `main`/`setup()` and inject it where needed. Framework-provided globals such as `Serial` and `Wire` are exempt.
+- Within a file, prefer classes. Across files, prefer functions for module boundaries.
+
+## Naming & Style
+
+- Follow Google naming conventions: `PascalCase` types, `camelCase` functions and locals, and `kPascalCase` constants and enum values. Reserve `ALL_CAPS` for macros and established hardware pin identifiers.
+- **Class member variables use an `m_` prefix followed by camelCase** — a deliberate departure from Google's trailing underscore. Public fields of plain data structs take no prefix; they are the struct's interface, not its hidden state.
+- Do **not** use a leading underscore: `_` followed by an uppercase letter is reserved everywhere, any leading underscore is reserved at global scope, and the ESP8266 core already defines `_min`/`_max` as function-like macros.
+- Avoid deep nesting; use early returns and guard clauses.
+- In compound `if` conditions, parenthesize each comparison explicitly — `if ((a == b) && (c < d))` — never rely on operator precedence.
 
 ## Code Documentation
 
